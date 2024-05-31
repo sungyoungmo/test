@@ -2,99 +2,93 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class InputKey : MonoBehaviour
 {
-
-    Animator animator;
-    readonly int aAttack = Animator.StringToHash("aAttack");
-    readonly int isMoving = Animator.StringToHash("isMoving");
-
-    float attackCoolDown = 0;
-
-    public float speed = 4.0f;
-    SpriteRenderer spriteRenderer;
+    private PlayerDash playerDash;
+    private PlayerAttack playerAttack;
+    private PlayerMove playerMove;
+    private PlayerJump playerJump;
+    private PlayerSkullSwitch playerSkullSwitch;
 
 
-    void Start()
+    //private Skull_Samurai skulSamurai;
+
+    public RuntimeAnimatorController[] animator;
+
+
+
+
+    void Awake()
     {
-        animator = GetComponentInChildren<Animator>();
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        //animator = GetComponent<Animator>();
-        speed = 4.0f;
-    }
+        playerDash = PlayerDash.instance;
+        playerAttack = PlayerAttack.instance;
+        playerMove = PlayerMove.instance;
+        playerJump = PlayerJump.instance;
+        playerSkullSwitch = PlayerSkullSwitch.instance;
 
+    }
 
     void Update()
     {
+        #region 방향키
 
-        float xmove = Input.GetAxisRaw("Horizontal");
+        playerMove.MoveOn();
 
-        if (xmove != 0)
-        {
-            if (xmove == 1)
-            {
-                spriteRenderer.flipX = false;
-            }
-            else
-            {
-                spriteRenderer.flipX = true;
-            }
+        #endregion
 
 
-            animator.SetBool(isMoving, true);
-
-            float fallSpeed = this.GetComponent<Rigidbody2D>().velocity.y;
-
-            Vector2 getVel = new Vector2(xmove, 0) * speed;
-
-            getVel.y = fallSpeed;
-
-            this.GetComponent<Rigidbody2D>().velocity = getVel;
-
-        }
-        else
-        {
-            float fallSpeed = this.GetComponent<Rigidbody2D>().velocity.y;
-
-            Vector2 getVel = new Vector2(xmove, 0) * 0;
-
-            getVel.y = fallSpeed;
-
-            this.GetComponent<Rigidbody2D>().velocity = getVel;
-
-            animator.SetBool(isMoving, false);
-        }
-
-
-       
-
-
-        //if (Input.GetKey(KeyCode.LeftArrow))
-        //{
-        //    this.GetComponent<Rigidbody2D>().velocity = Vector2.left * speed;
-
-        //    animator.SetBool(isMoving, true);
-
-        //}
-        //else if (Input.GetKey(KeyCode.RightArrow))
-        //{
-        //    //this.GetComponent<Rigidbody2D>().AddForce(Vector2.right);
-        //    this.GetComponent<Rigidbody2D>().velocity = Vector2.right * speed;
-        //    animator.SetBool(isMoving, true);
-        //}
-        //else
-        //{
-        //    animator.SetBool(isMoving, false);
-        //}
-
-
-
-
-
+        #region 공격 관련
+        
         if (Input.GetKeyDown(KeyCode.X))
         {
-            animator.SetTrigger(aAttack);
+            StartCoroutine(playerAttack.CanAttackTime());
+            StartCoroutine(playerAttack.Attack());
         }
-    }
+        #endregion
 
+        
+        #region 점프
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            playerJump.Jump();
+        }
+        #endregion
+
+
+        #region 대쉬 관련
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            if (playerDash.CanDash())
+            {
+                StartCoroutine(playerDash.Dash());
+                playerDash.UseDash();
+            }
+        }
+        #endregion
+
+
+        #region 스킬 관련
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            //skillSamurai.ExecuteSkill1();
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            //skillSamurai.ExecuteSkill2();
+        }
+
+        #endregion
+
+
+        #region 스컬 스위칭
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            playerSkullSwitch.Switch();
+        }
+
+        #endregion
+
+    }
 }
