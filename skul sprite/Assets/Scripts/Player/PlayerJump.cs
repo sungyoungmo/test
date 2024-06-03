@@ -14,12 +14,14 @@ public class PlayerJump : MonoBehaviour
     Animator animator;
     Rigidbody2D rb;
     SpriteRenderer spriteRenderer;
+    GameObject smokeEffectPrefab;
 
     public float jumpPower = 10.0f;
     protected int maxJumpCount = 2;
 
 
     float groundCheckDistance = 0.1f;
+    int groundLayer;
 
 
     int jumpCount = 0;
@@ -27,7 +29,17 @@ public class PlayerJump : MonoBehaviour
 
     void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else if (instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+
+        smokeEffectPrefab = Resources.Load<GameObject>("Prefab/Land_Smoke");
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
@@ -36,7 +48,6 @@ public class PlayerJump : MonoBehaviour
     void Update()
     {
         GroundCheck();
-        Debug.Log(isOnGround);
     }
 
 
@@ -70,6 +81,10 @@ public class PlayerJump : MonoBehaviour
             }
 
             animator.SetBool(stateOnJumping, true);
+            if (jumpCount == 1)
+            {
+                StartCoroutine("Smoke");
+            }
             jumpCount++;
         }
         
@@ -77,8 +92,8 @@ public class PlayerJump : MonoBehaviour
 
     void GroundCheck()
     {
-        int groundLayer = LayerMask.GetMask("GroundLayer");
-        // 플레이어 아래쪽으로 Raycast를 발사하여 땅이 있는지 확인
+        groundLayer = LayerMask.GetMask("GroundLayer");
+
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
         if (hit.collider != null)
         {
@@ -96,5 +111,12 @@ public class PlayerJump : MonoBehaviour
             animator.SetBool(stateOnGround, false);
             animator.SetBool(stateIsFalling, true);
         }
+    }
+
+    IEnumerator Smoke()
+    {
+        GameObject smokeEffectInstance = Instantiate(smokeEffectPrefab, this.transform.position, Quaternion.identity);
+        yield return new WaitForSeconds(1.8f);
+        Destroy(smokeEffectInstance);
     }
 }

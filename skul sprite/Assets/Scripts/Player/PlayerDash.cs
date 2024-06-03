@@ -10,6 +10,11 @@ public class PlayerDash : MonoBehaviour
     Rigidbody2D rb;
     SpriteRenderer spriteRenderer;
 
+    GameObject dashEffectTemplate;
+    SpriteRenderer nowSpriteRenderer;
+    GameObject dashSmokeEffectPrefab;
+
+
     public float dashForce = 1000.0f;
     public float antiGravity = 20.0f;
     public float dashCooldown = 1.0f;
@@ -19,15 +24,28 @@ public class PlayerDash : MonoBehaviour
     readonly int stateIsDash = Animator.StringToHash("stateIsDash");
 
 
-    private void Awake()
+    void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else if (instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+
+
+        dashSmokeEffectPrefab = Resources.Load<GameObject>("Prefab/Dash_Smoke");
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        rb = GetComponent<Rigidbody2D>();
 
+
+        rb = GetComponent<Rigidbody2D>();
     }
 
+    
     void FixedUpdate()
     {
         if (animator.GetBool(stateIsDash))
@@ -50,6 +68,7 @@ public class PlayerDash : MonoBehaviour
     public IEnumerator Dash()
     {
         animator.SetBool(stateIsDash, true);
+        StartCoroutine(OnDashEffect());
 
         yield return new WaitForSeconds(0.2f);
 
@@ -62,6 +81,60 @@ public class PlayerDash : MonoBehaviour
     {
         yield return new WaitForSeconds(dashCooldown);
         dashCount = 2;
+    }
+
+    public IEnumerator Dashafterimage()
+    {
+        GameObject afterimage = new GameObject("afterimage");
+
+        SpriteRenderer newSpriteRenderer = afterimage.AddComponent<SpriteRenderer>();
+
+        newSpriteRenderer.sprite = spriteRenderer.sprite;
+        newSpriteRenderer.color = new Color(0, 0, 0, 1);
+        if (!spriteRenderer.flipX)
+        {
+            newSpriteRenderer.flipX = false;
+        }
+        else
+        {
+            newSpriteRenderer.flipX = true;
+        }
+
+        afterimage.transform.position = this.transform.position;
+
+        yield return new WaitForSeconds(0.2f);
+
+        Destroy(afterimage);
+    }
+
+    IEnumerator DashEffect()
+    {
+        GameObject dashsmokeEffectInstance = Instantiate(dashSmokeEffectPrefab, this.transform.position, Quaternion.identity);
+        SpriteRenderer dashSpriteRenderer = dashsmokeEffectInstance.GetComponent<SpriteRenderer>(); // 여기를 수정했습니다.
+        if (spriteRenderer.flipX)
+        {
+            dashSpriteRenderer.flipX = true;
+        }
+        else
+        {
+            dashSpriteRenderer.flipX = false;
+        }
+
+        yield return new WaitForSeconds(2.0f);
+        Destroy(dashsmokeEffectInstance);
+    }
+
+
+
+    IEnumerator OnDashEffect()
+    {
+        StartCoroutine(DashEffect());
+        for (int i = 0; i < 5; i++)
+        {
+            StartCoroutine(Dashafterimage());
+
+            yield return new WaitForSeconds(0.05f);
+        }
     }
 
     public bool CanDash()
@@ -78,4 +151,6 @@ public class PlayerDash : MonoBehaviour
             StartCoroutine(DashCooldown());
         }
     }
+
+
 }

@@ -13,7 +13,16 @@ public class PlayerSkullSwitch : MonoBehaviour
 
     void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else if (instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+
         samuraiAnimatorController = Resources.Load<RuntimeAnimatorController>("AnimController/Samurai_Controller");
         knightAnimatorController = Resources.Load<RuntimeAnimatorController>("AnimController/LittleBone_Controller");
 

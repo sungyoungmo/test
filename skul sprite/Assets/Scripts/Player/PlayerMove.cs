@@ -9,7 +9,6 @@ public class PlayerMove : MonoBehaviour
     Animator animator;
     Rigidbody2D rb;
     SpriteRenderer spriteRenderer;
-    BoxCollider2D boxCollider;
 
 
     readonly int stateIsMoving = Animator.StringToHash("stateIsMoving");
@@ -19,13 +18,21 @@ public class PlayerMove : MonoBehaviour
     public float speed = 4.0f;
     float xmove;
 
-    private void Awake()
+    void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else if (instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
-        boxCollider = GetComponent<BoxCollider2D>();
 
     }
 
@@ -43,7 +50,6 @@ public class PlayerMove : MonoBehaviour
             Vector2 getvel = new Vector2(0, rb.velocity.y);
             rb.velocity = getvel;
         }
-
     }
 
     public void MoveOn()
@@ -60,19 +66,11 @@ public class PlayerMove : MonoBehaviour
                     if (xmove < 0)
                     {
                         spriteRenderer.flipX = true;
-
-                        Vector2 colliderOffset = boxCollider.offset;
-                        colliderOffset.x = -colliderOffset.x;
-                        boxCollider.offset = colliderOffset;
                     }
                     else
                     {
                         spriteRenderer.flipX = false;
                     }
-
-
-
-
                 }
             }
             else

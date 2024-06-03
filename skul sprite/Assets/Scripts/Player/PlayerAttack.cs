@@ -18,7 +18,16 @@ public class PlayerAttack : MonoBehaviour
 
     void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else if (instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
@@ -46,7 +55,6 @@ public class PlayerAttack : MonoBehaviour
             {
                 rb.AddForce(Vector2.left * 300.0f);
             }
-
 
             rb.velocity = Vector2.zero;
         }

@@ -12,20 +12,18 @@ public class InputKey : MonoBehaviour
     private PlayerSkullSwitch playerSkullSwitch;
 
 
-    //private Skull_Samurai skulSamurai;
-
-    public RuntimeAnimatorController[] animator;
-
-
-
-
-    void Awake()
+    void Start()
     {
         playerDash = PlayerDash.instance;
+
         playerAttack = PlayerAttack.instance;
+
         playerMove = PlayerMove.instance;
+
         playerJump = PlayerJump.instance;
+
         playerSkullSwitch = PlayerSkullSwitch.instance;
+
 
     }
 
