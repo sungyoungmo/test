@@ -18,11 +18,11 @@ public class LongDistanceMob : Enemy
     public override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);
-
     }
 
 
-
-
-
+    protected override void EnemyMove()
+    {
+        base.EnemyMove();
+    }
 }
