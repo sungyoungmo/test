@@ -4,45 +4,106 @@ using UnityEngine;
 
 public class AttackBox : MonoBehaviour
 {
-    public BoxCollider2D hitArea;
+    public Transform pos;
+    public Vector2 boxSize;
+    public RuntimeAnimatorController samuraiAnimatorController;
+    public RuntimeAnimatorController LittleBoneAnimatorController;
 
-    void Start()
+    PlayerInfo playerInfo;
+
+
+    SpriteRenderer spriteRenderer;
+    GameObject samuraiAttackEffectPrefab;
+    GameObject LittleBoneAttackEffectPrefab;
+
+    Animator animator;
+
+
+    void Awake()
     {
-        if (hitArea != null)
-        {
-            hitArea.enabled = false;
-            hitArea.isTrigger = true;
-        }
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
+
+        samuraiAttackEffectPrefab = Resources.Load<GameObject>("Prefab/Hit_SkeletonSword");
+        LittleBoneAttackEffectPrefab = Resources.Load<GameObject>("Prefab/Hit_Skul");
+
+
+        samuraiAnimatorController = Resources.Load<RuntimeAnimatorController>("AnimController/Samurai_Controller");
+        LittleBoneAnimatorController = Resources.Load<RuntimeAnimatorController>("AnimController/LittleBone_Controller");
+
+        playerInfo = GetComponentInParent<PlayerInfo>();
+
     }
+
+
 
     void ActivateHitArea()
     {
-        Debug.Log("ActivateHitArea");
-        if (hitArea != null)
+        if (spriteRenderer.flipX)
         {
-            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null)
+            pos.position = new Vector2(this.transform.position.x - 1.0f, this.transform.position.y + 0.5f);
+        }
+        else
+        {
+            pos.position = new Vector2(this.transform.position.x + 1.0f, this.transform.position.y + 0.5f);
+        }
+
+        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos.position, boxSize, 0);
+
+        foreach (Collider2D collider in collider2Ds)
+        {
+            if (collider.tag == "Enemy")
             {
-                hitArea.size = spriteRenderer.size;
+                collider.GetComponent<Enemy>().TakeDamage(playerInfo.attackDamage);
+                StartCoroutine(attackEffect());   
             }
-            hitArea.enabled = true;
         }
     }
 
     void DeactivateHitArea()
     {
-        Debug.Log("DeactivateHitArea");
-        if (hitArea != null)
-        {
-            hitArea.enabled = false;
-        }
+       
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    
+    IEnumerator attackEffect()
     {
-        if (other.gameObject.CompareTag("Enemy"))
+        GameObject attackEffectInstance;
+        
+        if (animator.runtimeAnimatorController == samuraiAnimatorController)    
         {
-            Debug.Log(1);
+            attackEffectInstance = Instantiate(samuraiAttackEffectPrefab, pos.position, Quaternion.identity);
+            attackEffectFlipX(attackEffectInstance);
         }
+        else
+        {
+            attackEffectInstance = Instantiate(LittleBoneAttackEffectPrefab, pos.position, Quaternion.identity);
+            attackEffectFlipX(attackEffectInstance);
+        }
+
+        yield return new WaitForSeconds(1.3f);
+        Destroy(attackEffectInstance);
+    }
+
+    void attackEffectFlipX(GameObject attackEffectInstance)
+    {
+        SpriteRenderer attackSpriteRenderer = attackEffectInstance.GetComponent<SpriteRenderer>();
+        if (spriteRenderer.flipX)
+        {
+            attackSpriteRenderer.flipX = true;
+        }
+        else
+        {
+            attackSpriteRenderer.flipX = false;
+        }
+
+    }
+
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(pos.position, boxSize);
     }
 }

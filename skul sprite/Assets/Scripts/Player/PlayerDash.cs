@@ -10,8 +10,6 @@ public class PlayerDash : MonoBehaviour
     Rigidbody2D rb;
     SpriteRenderer spriteRenderer;
 
-    GameObject dashEffectTemplate;
-    SpriteRenderer nowSpriteRenderer;
     GameObject dashSmokeEffectPrefab;
 
 
@@ -110,7 +108,7 @@ public class PlayerDash : MonoBehaviour
     IEnumerator DashEffect()
     {
         GameObject dashsmokeEffectInstance = Instantiate(dashSmokeEffectPrefab, this.transform.position, Quaternion.identity);
-        SpriteRenderer dashSpriteRenderer = dashsmokeEffectInstance.GetComponent<SpriteRenderer>(); // 여기를 수정했습니다.
+        SpriteRenderer dashSpriteRenderer = dashsmokeEffectInstance.GetComponent<SpriteRenderer>();
         if (spriteRenderer.flipX)
         {
             dashSpriteRenderer.flipX = true;

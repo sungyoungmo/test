@@ -7,7 +7,7 @@ public class PlayerSkullSwitch : MonoBehaviour
     public static PlayerSkullSwitch instance;
 
     public RuntimeAnimatorController samuraiAnimatorController;
-    public RuntimeAnimatorController knightAnimatorController;
+    public RuntimeAnimatorController LittleBoneAnimatorController;
 
     private Animator playerAnimator;
 
@@ -24,7 +24,7 @@ public class PlayerSkullSwitch : MonoBehaviour
         }
 
         samuraiAnimatorController = Resources.Load<RuntimeAnimatorController>("AnimController/Samurai_Controller");
-        knightAnimatorController = Resources.Load<RuntimeAnimatorController>("AnimController/LittleBone_Controller");
+        LittleBoneAnimatorController = Resources.Load<RuntimeAnimatorController>("AnimController/LittleBone_Controller");
 
         playerAnimator = GetComponent<Animator>();
     }
@@ -34,7 +34,7 @@ public class PlayerSkullSwitch : MonoBehaviour
     {
         if (playerAnimator.runtimeAnimatorController == samuraiAnimatorController)
         {
-            playerAnimator.runtimeAnimatorController = knightAnimatorController;
+            playerAnimator.runtimeAnimatorController = LittleBoneAnimatorController;
         }
         else
         {

@@ -10,6 +10,7 @@ public class PlayerAttack : MonoBehaviour
     Rigidbody2D rb;
     SpriteRenderer spriteRenderer;
 
+
     readonly int stateIsMoving = Animator.StringToHash("stateIsMoving");
     readonly int trAttack = Animator.StringToHash("trAttack");
     readonly int stateIsAttack = Animator.StringToHash("stateIsAttack");
@@ -73,4 +74,7 @@ public class PlayerAttack : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         animator.SetBool(stateIsAttack, false);
     }
+
+    
+
 }
