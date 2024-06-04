@@ -55,7 +55,9 @@ public class AttackBox : MonoBehaviour
             if (collider.tag == "Enemy")
             {
                 collider.GetComponent<Enemy>().TakeDamage(playerInfo.attackDamage);
-                StartCoroutine(attackEffect());   
+
+                Vector3 hitPoint = (pos.position + collider.transform.position) / 2;
+                StartCoroutine(attackEffect(hitPoint));   
             }
         }
     }
@@ -66,13 +68,13 @@ public class AttackBox : MonoBehaviour
     }
 
     
-    IEnumerator attackEffect()
+    IEnumerator attackEffect(Vector3 hitCollider)
     {
         GameObject attackEffectInstance;
         
         if (animator.runtimeAnimatorController == samuraiAnimatorController)    
         {
-            attackEffectInstance = Instantiate(samuraiAttackEffectPrefab, pos.position, Quaternion.identity);
+            attackEffectInstance = Instantiate(samuraiAttackEffectPrefab, (pos.position+ hitCollider) /2, Quaternion.identity);
             attackEffectFlipX(attackEffectInstance);
         }
         else
