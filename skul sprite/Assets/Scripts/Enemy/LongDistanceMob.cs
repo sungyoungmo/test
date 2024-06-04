@@ -6,6 +6,7 @@ public class LongDistanceMob : Enemy
 {
     readonly int IsHit = Animator.StringToHash("IsHit");
     public GameObject attackSign;
+    public GameObject arrow;
 
     private bool onAttack = false;
 
@@ -61,14 +62,16 @@ public class LongDistanceMob : Enemy
         attackSign.SetActive(true);
 
         yield return new WaitForSeconds(1.6f);
+        arrow.SetActive(true);
+
         animator.SetBool(IsAttack, false);
         attackSign.SetActive(false);
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(1.0f);
+
+        arrow.SetActive(false);
+        yield return new WaitForSeconds(2.0f);
         canAttack = false;
     }
 
 
-    
-
- 
 }
