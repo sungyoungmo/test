@@ -12,13 +12,14 @@ public class Enemy : MonoBehaviour
 
 
     public float hp;
-    protected float attackPower;
-    protected float moveSpeed;
+    public float attackPower;
+    public float moveSpeed;
     protected int groundLayer;
 
     protected bool isOnGround;
     protected bool canMove;
     protected bool canAttack;
+    bool isDead = false;
 
     protected float enemyGroundCheckDistance = 0.1f;
 
@@ -31,20 +32,28 @@ public class Enemy : MonoBehaviour
 
     protected readonly int IsWalk = Animator.StringToHash("IsWalk");
     protected readonly int IsAttack = Animator.StringToHash("IsAttack");
-    
+
+
+    private DeadEffectManager deadEffectManager;
 
     protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-        deadEffectPrefab = Resources.Load<GameObject>("Prefab/Enemy_Dead");
+        
+    }
+
+    protected virtual void Start()
+    {
+        deadEffectManager = DeadEffectManager.Instance;
     }
 
 
     protected virtual void Update()
     {
-        if (!animator.GetBool(IsWalk) && !canMove )
+        
+        if (!animator.GetBool(IsWalk) && !canMove)
         {
             StartCoroutine(EnemyMoveOn());
         }
@@ -53,7 +62,7 @@ public class Enemy : MonoBehaviour
             canMove = true;
         }
 
-        
+        EnenmyDetectPlayer();
 
         if (!animator.GetBool(IsAttack) && !canAttack)
         {
@@ -63,9 +72,10 @@ public class Enemy : MonoBehaviour
         {
             canAttack = true;
         }
-        EnenmyDetectPlayer();
+
 
         GroundCheck();
+
     }
 
     protected virtual void FixedUpdate()
@@ -94,8 +104,9 @@ public class Enemy : MonoBehaviour
 
         if (hp <= 0)
         {
-            StartCoroutine(startDeadEffect());
-            
+            //StartCoroutine(startDeadEffect());
+            Destroy(this.gameObject);
+
         }
         else
         {
@@ -174,7 +185,7 @@ public class Enemy : MonoBehaviour
         canMove = false;
     }
 
-    void EnenmyDetectPlayer()
+    protected virtual void EnenmyDetectPlayer()
     {
         Collider2D[] Detectcollider = Physics2D.OverlapBoxAll(enemyDetectRangePos.position, enemyDetectRangeBoxSize, 0);
         
@@ -182,20 +193,26 @@ public class Enemy : MonoBehaviour
         {
             if (collider.tag == "Untagged" && !animator.GetBool(IsAttack))
             {
-                if (collider.transform.position.x < enemyDetectRangePos.position.x)
+
+                if (Mathf.Abs(collider.transform.position.x - enemyDetectRangePos.position.x) > 0.5)
                 {
-                    spriteRenderer.flipX = true;
+                    if (collider.transform.position.x < enemyDetectRangePos.position.x)
+                    {
+                        spriteRenderer.flipX = true;
+                    }
+                    else
+                    {
+                        spriteRenderer.flipX = false;
+                    }
                 }
-                else
-                {
-                    spriteRenderer.flipX = false;
-                }
+
+                
 
             }
         }
     }
 
-    void EnemyAttackPlayer()
+    protected virtual void EnemyAttackPlayer()
     {
         Collider2D[] Attackcollider = Physics2D.OverlapBoxAll(enemyAttackRangePos.position, enemyAttackRangeBoxSize, 0);
 
@@ -203,6 +220,7 @@ public class Enemy : MonoBehaviour
         {
             if (collider.tag == "Untagged" && !animator.GetBool(IsAttack))
             {
+
                 StartCoroutine(setAttack());
 
             }
@@ -218,30 +236,16 @@ public class Enemy : MonoBehaviour
         canAttack = false;
     }
 
-    protected IEnumerator startDeadEffect()
+    //protected IEnumerator startDeadEffect()
+    //{
+        
+    //    Destroy(this.gameObject);
+    //}
+
+    private void OnDestroy()
     {
-        GameObject deadEffectInstance = Instantiate(deadEffectPrefab, this.transform.position, Quaternion.identity);
-        spriteRenderer.color = Color.clear;
-        yield return new WaitForSeconds(0.6f);
-        Destroy(deadEffectInstance);
-        Destroy(this.gameObject);
+        DeadEffectManager.Instance.CreateDeadEffect(this.transform.position);
     }
 
-
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.blue;
-        if (enemyDetectRangePos != null)
-        {
-            Gizmos.DrawWireCube(enemyDetectRangePos.position, enemyDetectRangeBoxSize);
-        }
-
-        Gizmos.color = Color.red;
-        if (enemyAttackRangePos != null)
-        {
-            Gizmos.DrawWireCube(enemyAttackRangePos.position, enemyAttackRangeBoxSize);
-        }
-    }
 
 }

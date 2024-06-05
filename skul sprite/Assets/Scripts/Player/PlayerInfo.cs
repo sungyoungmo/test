@@ -17,8 +17,8 @@ public class PlayerInfo : MonoBehaviour
     }
 
 
-    void Update()
+    public void GetDamage(float attackDamage)
     {
-        
+        playerHP = playerHP - attackDamage;
     }
 }

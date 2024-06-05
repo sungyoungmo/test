@@ -8,17 +8,11 @@ public class LongDistanceMob : Enemy
     public GameObject attackSign;
     public GameObject arrow;
 
-    private bool onAttack = false;
-
-    protected override void Awake()
+    
+    protected override void Start()
     {
-        base.Awake();
+        base.Start();
 
-        
-    }
-
-    void Start()
-    { 
         hp = 10;
         attackPower = 10;
         moveSpeed = 2;
@@ -28,12 +22,6 @@ public class LongDistanceMob : Enemy
     }
 
     
-
-    protected override void FixedUpdate()
-    {
-        base.FixedUpdate();
-    }
-
     public override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);
@@ -51,10 +39,6 @@ public class LongDistanceMob : Enemy
     }
 
 
-    protected override void GroundCheck()
-    {
-        base.GroundCheck();
-    }
     protected override IEnumerator setAttack()
     {
         animator.SetBool(IsAttack, true);
@@ -62,7 +46,10 @@ public class LongDistanceMob : Enemy
         attackSign.SetActive(true);
 
         yield return new WaitForSeconds(1.6f);
-        arrow.SetActive(true);
+        if (attackSign.activeSelf)
+        {
+            arrow.SetActive(true);
+        }
 
         animator.SetBool(IsAttack, false);
         attackSign.SetActive(false);

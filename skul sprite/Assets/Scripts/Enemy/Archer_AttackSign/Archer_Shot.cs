@@ -11,6 +11,8 @@ public class Archer_Shot : MonoBehaviour
     SpriteRenderer arrowRenderer;
     Transform enemyPos;
 
+    float damage;
+
     void Awake()
     {
         animator = GetComponent<Animator>();
@@ -21,7 +23,7 @@ public class Archer_Shot : MonoBehaviour
             archerSpriteRenderer = parentObject.GetComponent<SpriteRenderer>();
         }
 
-
+        damage = GetComponentInParent<LongDistanceMob>().attackPower;
         arrowRenderer = GetComponent<SpriteRenderer>();
     }
 
@@ -43,10 +45,13 @@ public class Archer_Shot : MonoBehaviour
 
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D othercol)
     {
-        if (other.CompareTag("Untagged"))
+        if (othercol.tag == "Untagged")
         {
+
+            othercol.GetComponentInParent<PlayerInfo>().GetDamage(damage);
+
             this.gameObject.SetActive(false);
         }
     }
