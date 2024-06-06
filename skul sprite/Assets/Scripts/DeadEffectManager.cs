@@ -13,13 +13,10 @@ public class DeadEffectManager : MonoBehaviour
        if (Instance == null)
         {
             Instance = this;
-            //DontDestroyOnLoad(gameObject);
         }
        else
         {
             DestroyImmediate(this);
-
-            //Destroy(gameObject);
         }
 
         deadEffectPrefab = Resources.Load<GameObject>("Prefab/Enemy_Dead");
