@@ -27,7 +27,6 @@ public class PlayerDash : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(this.gameObject);
         }
         else if (instance != this)
         {

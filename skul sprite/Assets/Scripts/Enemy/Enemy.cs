@@ -19,7 +19,6 @@ public class Enemy : MonoBehaviour
     protected bool isOnGround;
     protected bool canMove;
     protected bool canAttack;
-    bool isDead = false;
 
     protected float enemyGroundCheckDistance = 0.1f;
 

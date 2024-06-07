@@ -21,6 +21,35 @@ public class LargeMob : Enemy
         mAARb = this.GetComponent<Rigidbody2D>();
     }
 
+    protected override void Update()
+    {
+
+        if (!animator.GetBool(IsWalk) && !canMove)
+        {
+            StartCoroutine(EnemyMoveOn());
+        }
+        else
+        {
+            canMove = true;
+        }
+
+        EnenmyDetectPlayer();
+
+        if (!animator.GetBool(IsAttack) && !canAttack)
+        {
+            EnemyAttackPlayer();
+        }
+        else
+        {
+            canAttack = true;
+        }
+
+        if (!animator.GetBool(IsTackle))
+        {
+            GroundCheck();
+        }
+        
+    }
 
 
 
@@ -93,13 +122,9 @@ public class LargeMob : Enemy
 
     protected override IEnumerator setAttack()
     {
-        int rValue = Random.Range(2, 3);
+        int rValue = Random.Range(1, 3);
 
-        if (rValue == 1)
-        {
-            StartCoroutine(base.setAttack());
-        }
-        else
+        if(rValue == 1)
         {
             animator.SetBool(IsTackle, true);
             yield return new WaitForSeconds(0.8f);
@@ -115,11 +140,8 @@ public class LargeMob : Enemy
             {
                 getVal = new Vector2(5, 0);
             }
-
-
+            
             mAARb.velocity = getVal;
-
-
 
             yield return new WaitForSeconds(1.8f);
             tackleEffect.SetActive(false);
@@ -131,6 +153,10 @@ public class LargeMob : Enemy
 
             yield return new WaitForSeconds(3.0f);
             canAttack = false;
+        }
+        else
+        {
+            StartCoroutine(base.setAttack());
         }
     }
 

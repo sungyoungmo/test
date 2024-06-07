@@ -10,20 +10,36 @@ public class SpawnManager : MonoBehaviour
     GameObject archer;
     GameObject manAtArms;
 
+    public GameObject[] spawnEnemy;
+
+    bool isTriggerd;
+
+
+
     void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            DestroyImmediate(this);
-        }
-
+        
         appearancePrefab = Resources.Load<GameObject>("Prefab/Enemy_Appearance");
         archer = Resources.Load<GameObject>("Prefab/Monster_Archer");
         manAtArms = Resources.Load<GameObject>("Prefab/Monster_ManAtArms");
+
+    }
+
+
+    public void SpawnEnemiesAtPositions()
+    {
+        foreach (var spawnPoint in spawnEnemy)
+        {
+            SpawnPostion spawnPosition = spawnPoint.GetComponent<SpawnPostion>();
+            if (spawnPosition != null)
+            {
+                SpawnEnemy(spawnPosition.transform, spawnPosition.unit);
+            }
+            else
+            {
+                Debug.LogError("Assigned GameObject does not have a SpawnPosition component.", spawnPoint);
+            }
+        }
     }
 
     public void SpawnEnemy(Transform position, Unit unitName)
@@ -34,7 +50,7 @@ public class SpawnManager : MonoBehaviour
     IEnumerator appearanceEffect(Transform position, Unit unitName)
     {
         GameObject effectInstance = Instantiate(appearancePrefab, position.position, Quaternion.identity);
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.8f);
         Destroy(effectInstance);
 
         GameObject SpawnInstance;
@@ -52,6 +68,22 @@ public class SpawnManager : MonoBehaviour
                 break;
         }
 
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!isTriggerd)
+        {
+            SpawnEnemiesAtPositions();
+            isTriggerd = true;
+        }
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(this.transform.position, this.gameObject.GetComponent<BoxCollider2D>().size);
     }
 }
 public enum Unit

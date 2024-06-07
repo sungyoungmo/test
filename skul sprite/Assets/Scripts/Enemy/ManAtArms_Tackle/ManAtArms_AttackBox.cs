@@ -40,10 +40,5 @@ public class ManAtArms_AttackBox : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.white;
-        Gizmos.DrawWireCube(pos.position, boxSize);
-    }
 
 }

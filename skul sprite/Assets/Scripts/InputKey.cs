@@ -14,6 +14,7 @@ public class InputKey : MonoBehaviour
 
     void Start()
     {
+
         playerDash = PlayerDash.instance;
 
         playerAttack = PlayerAttack.instance;
@@ -24,7 +25,7 @@ public class InputKey : MonoBehaviour
 
         playerSkullSwitch = PlayerSkullSwitch.instance;
 
-
+        DontDestroyOnLoad(this.gameObject);
     }
 
     void Update()
