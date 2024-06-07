@@ -8,6 +8,9 @@ TagManager:
   - Enemy
   - Effect
   - Dead
+  - CameraLimit
+  - HealPack
+  - Skull
   layers:
   - Default
   - TransparentFX
@@ -16,8 +19,8 @@ TagManager:
   - Water
   - UI
   - Enemy
-  - 
-  - 
+  - Skill
+  - Skull
   - 
   - 
   - 

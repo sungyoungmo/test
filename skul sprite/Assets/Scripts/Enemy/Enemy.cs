@@ -33,6 +33,8 @@ public class Enemy : MonoBehaviour
     protected readonly int IsAttack = Animator.StringToHash("IsAttack");
 
 
+    public bool gotHealPack;
+
     private DeadEffectManager deadEffectManager;
 
     protected virtual void Awake()
@@ -235,15 +237,13 @@ public class Enemy : MonoBehaviour
         canAttack = false;
     }
 
-    //protected IEnumerator startDeadEffect()
-    //{
-        
-    //    Destroy(this.gameObject);
-    //}
-
     private void OnDestroy()
     {
         DeadEffectManager.Instance.CreateDeadEffect(this.transform.position);
+        if (gotHealPack)
+        {
+            DeadEffectManager.Instance.CreateHealPack(this.transform.position);
+        }
     }
 
 

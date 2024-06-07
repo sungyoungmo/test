@@ -26,6 +26,17 @@ public class PlayerInfo : MonoBehaviour
         {
             playerHP = playerHP - attackDamage;
         }
-        
+    }
+
+    public void GetHeal(float healAmount)
+    {
+        if (playerHP + healAmount <= playerMaxHp)
+        {
+            playerHP = playerHP + healAmount;
+        }
+        else
+        {
+            playerHP = playerMaxHp;
+        }
     }
 }

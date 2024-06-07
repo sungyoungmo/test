@@ -200,6 +200,7 @@ MonoBehaviour:
   hp: 0
   attackPower: 0
   moveSpeed: 0
+  gotHealPack: 1
   tackleEffect: {fileID: 1708816084997673184}
 --- !u!114 &1708816083894021030
 MonoBehaviour:
