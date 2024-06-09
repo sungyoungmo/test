@@ -20,4 +20,23 @@ public class PlayerPortalUse : MonoBehaviour
         }
     }
 
+
+    public void portalUse()
+    {
+        CircleCollider2D circleCollider = GetComponent<CircleCollider2D>();
+
+        Vector2 boxSize = new Vector2(circleCollider.radius * 2, circleCollider.radius * 2);
+
+        Collider2D[] hitColliders = Physics2D.OverlapBoxAll((Vector2)transform.position, boxSize, 0);
+
+
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.CompareTag("portal"))
+            {
+                Debug.Log("Portal activated!");
+            }
+        }
+    }
+
 }

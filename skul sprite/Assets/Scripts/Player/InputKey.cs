@@ -11,7 +11,7 @@ public class InputKey : MonoBehaviour
     private PlayerJump playerJump;
     private PlayerSkullSwitch playerSkullSwitch;
     private PlayerSkill playerSkill;
-
+    private PlayerPortalUse playerPortalUse;
 
     void Start()
     {
@@ -28,6 +28,8 @@ public class InputKey : MonoBehaviour
 
         playerSkill = PlayerSkill.instance;
 
+        playerPortalUse = PlayerPortalUse.instance;
+
 
         DontDestroyOnLoad(this.gameObject);
     }
@@ -42,7 +44,7 @@ public class InputKey : MonoBehaviour
 
 
         #region 공격 관련
-        
+
         if (Input.GetKeyDown(KeyCode.X))
         {
             StartCoroutine(playerAttack.CanAttackTime());
@@ -50,7 +52,7 @@ public class InputKey : MonoBehaviour
         }
         #endregion
 
-        
+
         #region 점프
         if (Input.GetKeyDown(KeyCode.C))
         {
@@ -93,5 +95,12 @@ public class InputKey : MonoBehaviour
 
         #endregion
 
+
+        #region 포탈 사용
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            playerPortalUse.portalUse();
+        }
+        #endregion
     }
 }

@@ -8,10 +8,17 @@ public class ThrowSkull : MonoBehaviour
     bool isUsed = false;
     float damage;
 
+    RuntimeAnimatorController LittleBoneAnimatorController;
+    RuntimeAnimatorController HeadLessAnimatorController;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         damage = GameObject.Find("player").GetComponent<PlayerInfo>().attackDamage;
+
+        LittleBoneAnimatorController = Resources.Load<RuntimeAnimatorController>("AnimController/LittleBone_Controller");
+        HeadLessAnimatorController = Resources.Load<RuntimeAnimatorController>("AnimController/HeadLess_Controller");
+
     }
 
 
@@ -44,7 +51,13 @@ public class ThrowSkull : MonoBehaviour
 
         if (collision.collider.CompareTag("Untagged"))
         {
-            Debug.Log(3);
+            if (collision.gameObject.GetComponent<Animator>().runtimeAnimatorController == HeadLessAnimatorController)
+            {
+                collision.gameObject.GetComponent<Animator>().runtimeAnimatorController = LittleBoneAnimatorController;
+                collision.gameObject.GetComponent<PlayerSkill>().can_LittleBone_Skill_One = false;
+            }
+
+            Destroy(this.gameObject);
         }
     }
 }

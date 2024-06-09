@@ -38,7 +38,7 @@ public class SpawnManager : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Assigned GameObject does not have a SpawnPosition component.", spawnPoint);
+                Debug.LogError("enemy error");
             }
         }
     }
@@ -54,7 +54,7 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(0.8f);
         Destroy(effectInstance);
 
-        GameObject SpawnInstance;
+        GameObject SpawnInstance = null;
 
         switch (unitName)
         {
@@ -69,9 +69,13 @@ public class SpawnManager : MonoBehaviour
                 break;
         }
 
+        if (SpawnInstance != null && MonsterManager.Instance != null)
+        {
+            MonsterManager.Instance.AddMonster(SpawnInstance);
+        }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if (!isTriggerd && collision.CompareTag("Untagged"))
         {
@@ -81,11 +85,7 @@ public class SpawnManager : MonoBehaviour
     }
 
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(this.transform.position, this.gameObject.GetComponent<BoxCollider2D>().size);
-    }
+    
 }
 public enum Unit
 {

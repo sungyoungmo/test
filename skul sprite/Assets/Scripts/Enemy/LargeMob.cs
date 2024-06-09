@@ -122,7 +122,7 @@ public class LargeMob : Enemy
 
     protected override IEnumerator setAttack()
     {
-        int rValue = Random.Range(1, 3);
+        int rValue = Random.Range(1, 5);
 
         if(rValue == 1)
         {

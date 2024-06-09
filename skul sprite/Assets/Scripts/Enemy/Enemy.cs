@@ -239,6 +239,7 @@ public class Enemy : MonoBehaviour
 
     private void OnDestroy()
     {
+        MonsterManager.Instance.RemoveMonster(this.gameObject);
         DeadEffectManager.Instance.CreateDeadEffect(this.transform.position);
         if (gotHealPack)
         {

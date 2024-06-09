@@ -16,7 +16,8 @@ public class PlayerSkill : MonoBehaviour
     RuntimeAnimatorController HeadLessAnimatorController;
 
     float LittleBone_Skill_One_CoolTime = 5.0f;
-    float LittleBone_Skill_One_CoolTime_Max = 5.0f;
+    public bool can_LittleBone_Skill_One = true;
+
 
     float LittleBone_Skill_Two_CoolTime = 3.0f;
     float LittleBone_Skill_Two_CoolTime_Max = 3.0f;
@@ -72,8 +73,6 @@ public class PlayerSkill : MonoBehaviour
                 LittleBone_skill_one();
             }
         }
-
-       
     }
 
     public void Skill_Two()
@@ -92,9 +91,12 @@ public class PlayerSkill : MonoBehaviour
 
     void LittleBone_skill_one()
     {
-        animator.SetBool(stateSkillOne, true);
-        StartCoroutine(LittleBone_Skill_One_Change());
-
+        if (!can_LittleBone_Skill_One)
+        {
+            Debug.Log(10);
+            animator.SetBool(stateSkillOne, true);
+            StartCoroutine(LittleBone_Skill_One_Change());
+        }
     }
 
     void Samurai_skill_one()
@@ -106,6 +108,13 @@ public class PlayerSkill : MonoBehaviour
     // skull의 위치 받아와서 그쪽으로 이동 얘는 이동만(쿨타임 초기화는 ThrowSkull에서 처리)
     void LittleNoe_skill_Two()
     {
+        GameObject skullObject = GameObject.Find("Skul(Clone)");
+
+        if (skullObject != null)
+        {
+            this.transform.position = skullObject.GetComponent<Transform>().position;
+        }
+
 
     }
 
@@ -118,7 +127,13 @@ public class PlayerSkill : MonoBehaviour
 
     IEnumerator LittleBone_Skill_One_Change()
     {
+        can_LittleBone_Skill_One = true;
+
         GameObject skullInstance;
+
+        
+
+        yield return new WaitForSeconds(0.4f);
 
         if (spriteRenderer.flipX)
         {
@@ -139,19 +154,22 @@ public class PlayerSkill : MonoBehaviour
             skullInstance.GetComponent<Rigidbody2D>().velocity = Vector2.right * 10.0f;
         }
 
-        yield return new WaitForSeconds(0.4f);
-
         animator.runtimeAnimatorController = HeadLessAnimatorController;
 
         yield return new WaitForSeconds(LittleBone_Skill_One_CoolTime);
+
+        if (animator.runtimeAnimatorController == HeadLessAnimatorController)
+        {
+            animator.runtimeAnimatorController = LittleBoneAnimatorController;
+        }
 
         if (skullInstance != null)
         {
             Destroy(skullInstance);
         }
 
+        can_LittleBone_Skill_One = false;
 
-       
 
     }
 }

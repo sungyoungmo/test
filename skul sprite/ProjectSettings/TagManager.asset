@@ -11,6 +11,7 @@ TagManager:
   - CameraLimit
   - HealPack
   - Skull
+  - portal
   layers:
   - Default
   - TransparentFX
