@@ -54,7 +54,7 @@ public class ThrowSkull : MonoBehaviour
             if (collision.gameObject.GetComponent<Animator>().runtimeAnimatorController == HeadLessAnimatorController)
             {
                 collision.gameObject.GetComponent<Animator>().runtimeAnimatorController = LittleBoneAnimatorController;
-                collision.gameObject.GetComponent<PlayerSkill>().can_LittleBone_Skill_One = false;
+                collision.gameObject.GetComponent<PlayerSkill>().can_LittleBone_Skill_One = true;
             }
 
             Destroy(this.gameObject);

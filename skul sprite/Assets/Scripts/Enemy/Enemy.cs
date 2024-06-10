@@ -119,9 +119,9 @@ public class Enemy : MonoBehaviour
     }
 
 
-    float fadeDuration = 0.5f;
+    protected float fadeDuration = 0.5f;
 
-    private IEnumerator FadeToOriginalColor()
+    protected virtual IEnumerator FadeToOriginalColor()
     {
         Color originalColor = Color.white;
         Color startColor = spriteRenderer.color;

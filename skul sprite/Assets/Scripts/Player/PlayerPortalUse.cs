@@ -34,7 +34,8 @@ public class PlayerPortalUse : MonoBehaviour
         {
             if (hitCollider.CompareTag("portal"))
             {
-                Debug.Log("Portal activated!");
+                hitCollider.GetComponent<Portal>().portalUse();
+
             }
         }
     }

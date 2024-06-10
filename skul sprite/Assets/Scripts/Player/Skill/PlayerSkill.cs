@@ -91,7 +91,7 @@ public class PlayerSkill : MonoBehaviour
 
     void LittleBone_skill_one()
     {
-        if (!can_LittleBone_Skill_One)
+        if (can_LittleBone_Skill_One)
         {
             Debug.Log(10);
             animator.SetBool(stateSkillOne, true);
@@ -127,7 +127,9 @@ public class PlayerSkill : MonoBehaviour
 
     IEnumerator LittleBone_Skill_One_Change()
     {
-        can_LittleBone_Skill_One = true;
+        Debug.Log(1);
+
+        can_LittleBone_Skill_One = false;
 
         GameObject skullInstance;
 
@@ -168,7 +170,7 @@ public class PlayerSkill : MonoBehaviour
             Destroy(skullInstance);
         }
 
-        can_LittleBone_Skill_One = false;
+        can_LittleBone_Skill_One = true;
 
 
     }

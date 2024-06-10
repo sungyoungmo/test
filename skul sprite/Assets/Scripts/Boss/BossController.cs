@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class BossController : MonoBehaviour
 {
-    public GameObject Head;
     public GameObject Chin;
     public GameObject Body;
     public GameObject Left_Hand;
@@ -26,13 +25,19 @@ public class BossController : MonoBehaviour
 
     void Awake()
     {
-        Head_animator = Head.GetComponent<Animator>();
+        //Head_animator = Head.GetComponent<Animator>();
         Left_Hand_animator = Left_Hand.GetComponent<Animator>();
         Right_Hand_animator = Right_Hand.GetComponent<Animator>();
 
-        StartCoroutine(BossPattern());
     }
 
+
+    void Start()
+    {
+        bossHand = Boss_Hand.instance;
+        StartCoroutine(BossPattern());
+       
+    }
 
     IEnumerator BossPattern()
     {
@@ -46,7 +51,7 @@ public class BossController : MonoBehaviour
 
     IEnumerator pattern()
     {
-        int rValue = Random.Range(1, 4);
+        int rValue = Random.Range(1, 2);
 
         switch (rValue)
         {
@@ -54,10 +59,10 @@ public class BossController : MonoBehaviour
                 yield return BossSlide();
                 break;
             case 2:
-                yield return BossStamp();
+                //yield return BossStamp();
                 break;
             case 3:
-                yield return BossMagic();
+                //yield return BossMagic();
                 break;
             default:
                 break;
@@ -66,67 +71,11 @@ public class BossController : MonoBehaviour
 
     IEnumerator BossSlide()
     {
-        GameObject useLHand = null;
 
-        int radValue = Random.Range(0, 2);
 
-        if (radValue == 0)
-        {
-            useLHand = Left_Hand;
-        }
-        else
-        {
-            useLHand = Right_Hand;
-        }
-
-        useLHand.GetComponent<Boss_Hand>().Hand_Slide();
-
-        yield return new WaitForSeconds(10.0f);
-
-        useLHand.GetComponent<Boss_Hand>().Hand_Slide();
-    }
-    IEnumerator BossStamp()
-    {
-        GameObject useLHand = null;
-
-        int radValue = Random.Range(0, 2);
-
-        if (radValue == 0)
-        {
-            useLHand = Left_Hand;
-        }
-        else
-        {
-            useLHand = Right_Hand;
-        }
-
-        useLHand.GetComponent<Boss_Hand>().Hand_Stamp();
-
-        yield return new WaitForSeconds(10.0f);
-
-        useLHand.GetComponent<Boss_Hand>().Hand_Stamp();
-
-    }
-    IEnumerator BossMagic()
-    {
-        GameObject useLHand = null;
-
-        int radValue = Random.Range(0, 2);
-
-        if (radValue == 0)
-        {
-            useLHand = Left_Hand;
-        }
-        else
-        {
-            useLHand = Right_Hand;
-        }
-
-        useLHand.GetComponent<Boss_Hand>().Hand_Magic();
-
-        yield return new WaitForSeconds(15.0f);
-
-        useLHand.GetComponent<Boss_Hand>().Hand_Magic();
+        // 그냥 양쪽 끝으로 움직이는 모션과 슬라이드 하는 모션 구현하기
+        bossHand.Hand_Choose();
+        yield return new WaitForSeconds(5.0f);
 
     }
 
